@@ -15,10 +15,9 @@ fn main() {
 
     let mut clients = vec![];
     let (tx, rx) = mpsc::channel::<String>();
+    println!("Server running at: {}", LOCAL);
+    
     loop {
-
-        println!("Server running at: {}", LOCAL);
-
         if let Ok((mut socket, addr)) = server.accept() {
             println!("Client {} connected", addr);
 
