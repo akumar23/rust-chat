@@ -2,6 +2,8 @@ use std::io::{ErrorKind, Read, Write};
 use std::net::TcpListener;
 use std::sync::mpsc;
 use std::thread;
+use std::thread::sleep;
+use std::time::Duration;
 
 const LOCAL: &str = "127.0.0.1:6000";
 const MSG_SIZE: usize = 32;
@@ -9,10 +11,14 @@ const MSG_SIZE: usize = 32;
 fn main() {
     let server = TcpListener::bind(LOCAL).expect("Listener failed to bind");
     server.set_nonblocking(true).expect("failed to initialize non-blocking");
+    let five_seconds = Duration::new(5, 0);
 
     let mut clients = vec![];
     let (tx, rx) = mpsc::channel::<String>();
     loop {
+
+        println!("Server running at: {}", LOCAL);
+
         if let Ok((mut socket, addr)) = server.accept() {
             println!("Client {} connected", addr);
 
@@ -37,7 +43,7 @@ fn main() {
                     }
                 }
 
-                sleep();
+                sleep(five_seconds);
             });
         }
 
@@ -50,6 +56,6 @@ fn main() {
             }).collect::<Vec<_>>();
         }
 
-        sleep();
+        sleep(five_seconds);
     }
 }
